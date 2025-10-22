@@ -1,5 +1,5 @@
 import 'package:cosmoview/telas/controle_interacao/controle_login.dart';
-import 'package:cosmoview/telas/localwidget/campo_edicao.dart';
+import 'package:cosmoview/util/widget/campo_edicao.dart';
 import 'package:flutter/material.dart';
 
 class TelaLogin extends StatefulWidget {
@@ -30,7 +30,7 @@ class _TelaLoginState extends State<TelaLogin> {
               texto_dica: "Digite seu login",
               controlador: _controle.controlador_login,
               teclado: TextInputType.emailAddress,
-              recebedor_foco: _controle.foco_login,
+              recebedor_foco: _controle.focus_senha,
             ),
           ]
         )

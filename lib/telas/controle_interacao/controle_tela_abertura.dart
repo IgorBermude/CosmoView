@@ -11,14 +11,14 @@ class ControleTelaAbertura{
 
     future.then((value) => {
 
-      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      FirebaseAuth.instance.authStateChanges().listen((Usuario? user) {
         if (user == null) {
           push(context, TelaAbertura(), replace: true);
         } else {
           Usuario usuario;
           FirebaseFirestore.instance
               .collection('usuarios')
-              .where("email", isEqualTo: "${user.email}")
+              .where("email", isEqualTo: "${user.login}")
               .snapshots()
               .listen((data){
 
@@ -42,14 +42,14 @@ class ControleTelaAbertura{
     } else {
       return Navigator.push(
         context,
-        MaterialPageRoute(builder: (BuildContext context) {),
+        MaterialPageRoute(builder: (BuildContext context) {
           return tela;
         }),
       );
     }
   }
 
-  void pop(BuildContext context, {String mensagem = null}){
+  void pop(BuildContext context , [String? mensagem]){
     if(mensagem == null){
       Navigator.of(context).pop();
     }else{

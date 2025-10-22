@@ -1,10 +1,25 @@
 // filepath: c:\Users\igors\AndroidStudioProjects\CosmoView\lib\telas\tela_principal.dart
+import 'package:cosmoview/telas/controle_interacao/controle_tela_principal.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmoview/dominio/usuario.dart';
 
-class TelaPrincipal extends StatelessWidget {
+class TelaPrincipal extends StatefulWidget {
   final Usuario usuario;
-  const TelaPrincipal({super.key, required this.usuario});
+  const TelaPrincipal(this.usuario);
+  @override
+  _TelaPrincipalState createState() => _TelaPrincipalState();
+
+}
+
+class _TelaPrincipalState extends State<TelaPrincipal> {
+  late ControleTelaPrincipal _controle;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _controle = ControleTelaPrincipal(widget.usuario);
+  }
 
   @override
   Widget build(BuildContext context) {
