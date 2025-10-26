@@ -33,6 +33,11 @@ migrate_working_dir/
 .pub/
 /build/
 
+# Flutter / Dart
+.packages
+build/
+.vscode/
+
 # Symbolication related
 app.*.symbols
 
@@ -43,3 +48,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Android / iOS builds
+android/build/
+ios/Pods/
+*.apk
+*.aab
+*.so
