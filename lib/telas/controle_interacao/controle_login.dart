@@ -1,8 +1,10 @@
 import 'package:cosmoview/dominio/usuario.dart';
+import 'package:cosmoview/util/nav.dart';
 import 'package:cosmoview/util/widget/mensagem_alerta.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:email_validator/email_validator.dart';
 
 import '../tela_principal.dart';
 
@@ -34,7 +36,7 @@ class ControleTelaLogin {
           // Logando
           UserCredential userCredential = await _auth
               .signInWithEmailAndPassword(email: login, password: senha);
-          _irParaTelaPrincipal(userCredential.user, context);
+          _irParaTelaPrincipal(userCredential.user as Usuario?, context);
         } on FirebaseAuthException catch (e) {
           if (e.code == 'user-not-found') {
             MensagemAlerta(
@@ -56,7 +58,7 @@ class ControleTelaLogin {
   void _irParaTelaPrincipal(Usuario? user, BuildContext context) {
     // Buscando o usuário no serviço de armazenamento e chamando a tela Principal
     _collection_usuarios
-        .where("email", isEqualTo: "${user!.email}")
+        .where("email", isEqualTo: "${user!.login}")
         .snapshots()
         .listen((data) {
       Usuario usuario = Usuario.fromMap(data.docs[0].data());
@@ -81,7 +83,7 @@ class ControleTelaLogin {
             'email': login,
           })
               .then(
-                  (value) => _irParaTelaPrincipal(userCredential.user, context))
+                  (value) => _irParaTelaPrincipal(userCredential.user as Usuario?, context))
               .catchError(
                   (error) => print("Falha ao adicionar o usuário: $error"));
         } on FirebaseAuthException catch (e) {
