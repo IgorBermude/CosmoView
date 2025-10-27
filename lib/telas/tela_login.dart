@@ -18,44 +18,65 @@ class _TelaLoginState extends State<TelaLogin> {
     _controle = ControleTelaLogin();
   }
 
-  _body(){
+  Widget _body() {
     return Form(
       key: _controle.formkey,
       child: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: ListView(
           children: <Widget>[
             CampoEdicao(
-              "Login",
-              texto_dica: "Digite seu login",
+              "Email",
+              texto_dica: "Digite seu email",
               controlador: _controle.controlador_login,
               teclado: TextInputType.emailAddress,
               recebedor_foco: _controle.focus_senha,
             ),
-          ]
-        )
+            const SizedBox(height: 12),
+            CampoEdicao(
+              "Senha",
+              texto_dica: "Digite sua senha",
+              controlador: _controle.controlador_senha,
+              passaword: true,
+              marcador_foco: _controle.focus_senha,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => _controle.logar(context),
+              child: const Text('Entrar'),
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton(
+              onPressed: () => _controle.cadastrar(context),
+              child: const Text('Cadastrar'),
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: InkWell(
+                onTap: () {
+                  // Caso queira navegar para tela de recuperação ou cadastro separado
+                },
+                child: const Text(
+                  "Esqueceu a senha?",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 14,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 46,
-      margin: EdgeInsets.only(top: 20),
-      child: InkWell(
-        onTap: (){
-          _controle.cadastrar(context);
-       },
-        child: Text(
-          "Cadastre-se",
-          style: TextStyle(
-            color: Colors.blue,
-            fontSize: 16,
-            decoration: TextDecoration.underline,
-          ),
-        ),
-      ),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Login')),
+      body: _body(),
     );
   }
 }

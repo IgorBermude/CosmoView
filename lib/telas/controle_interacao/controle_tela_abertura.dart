@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cosmoview/dominio/usuario.dart';
 import 'package:cosmoview/telas/tela_edicao_usuario.dart';
 import 'package:cosmoview/telas/tela_abertura.dart';
+import 'package:cosmoview/telas/tela_login.dart';
 import 'package:cosmoview/telas/tela_principal.dart';
+import 'package:cosmoview/util/widget/mensagem_alerta.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -13,12 +15,14 @@ class ControleTelaAbertura{
     future.then((value) {
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user == null) {
-          push(context, TelaAbertura(), replace: true);
+          MensagemAlerta(context, "Usuário não autenticado.");
+          push(context, TelaLogin(), replace: true);
         } else {
+          MensagemAlerta(context, "Usuário autenticado: ${user.email}");
           final String? email = user.email;
           if (email == null || email.isEmpty) {
             // Se usuário não tem email, redireciona para abertura/edição
-            push(context, TelaAbertura(), replace: true);
+            push(context, TelaLogin(), replace: true);
             return;
           }
 
@@ -31,14 +35,17 @@ class ControleTelaAbertura{
               final doc = snapshot.docs.first;
               final Usuario usuario = Usuario.fromMap(doc.data() as Map<String, dynamic>);
               usuario.id = doc.id;
+              MensagemAlerta(context, "Usuário encontrado: ${usuario.login}");
               push(context, TelaPrincipal(usuario), replace: true);
             } else {
               // Nenhum usuário encontrado -> abrir tela de abertura ou edição
-              push(context, TelaAbertura(), replace: true);
+              MensagemAlerta(context, "Nenhum usuário encontrado para o email: $email");
+              push(context, TelaLogin(), replace: true);
             }
           }).catchError((error) {
             // Em caso de erro na consulta, abrir tela de abertura como fallback
-            push(context, TelaAbertura(), replace: true);
+            MensagemAlerta(context, "Erro ao buscar usuário: $error");
+            push(context, TelaLogin(), replace: true);
           });
         }
       });

@@ -36,7 +36,8 @@ class ControleTelaLogin {
           // Logando
           UserCredential userCredential = await _auth
               .signInWithEmailAndPassword(email: login, password: senha);
-          _irParaTelaPrincipal(userCredential.user as Usuario?, context);
+          User? firebaseUser = userCredential.user;
+          _irParaTelaPrincipal(firebaseUser, context);
         } on FirebaseAuthException catch (e) {
           if (e.code == 'user-not-found') {
             MensagemAlerta(
@@ -47,7 +48,11 @@ class ControleTelaLogin {
               "Erro: Password inválido!!!",
             );
             print('Wrong password provided for that user.');
+          } else {
+            MensagemAlerta(context, 'Erro: ${e.message}');
           }
+        } catch (e) {
+          MensagemAlerta(context, 'Erro inesperado: $e');
         }
       } else {
         MensagemAlerta(context, "Erro: Email informado com formato inválido");
@@ -55,16 +60,33 @@ class ControleTelaLogin {
     }
   }
 
-  void _irParaTelaPrincipal(Usuario? user, BuildContext context) {
-    // Buscando o usuário no serviço de armazenamento e chamando a tela Principal
-    _collection_usuarios
-        .where("email", isEqualTo: "${user!.login}")
-        .snapshots()
-        .listen((data) {
-      Usuario usuario = Usuario.fromMap(data.docs[0].data());
-      usuario.id = data.docs[0].id;
-      push(context, TelaPrincipal(usuario), replace: true);
-    });
+  void _irParaTelaPrincipal(User? firebaseUser, BuildContext context) async {
+    if (firebaseUser == null || firebaseUser.email == null) {
+      MensagemAlerta(context, "Erro: usuário inválido após autenticação");
+      return;
+    }
+
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot = await _collection_usuarios
+          .where("email", isEqualTo: firebaseUser.email)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final doc = snapshot.docs.first;
+        Usuario usuario = Usuario.fromMap(doc.data());
+        usuario.id = doc.id;
+        push(context, TelaPrincipal(usuario), replace: true);
+      } else {
+        // Caso não exista, criar documento mínimo e navegar
+        final docRef = await _collection_usuarios.add({'email': firebaseUser.email});
+        Usuario usuario = Usuario();
+        usuario.login = firebaseUser.email;
+        usuario.id = docRef.id;
+        push(context, TelaPrincipal(usuario), replace: true);
+      }
+    } catch (e) {
+      MensagemAlerta(context, 'Erro ao buscar/registrar usuário: $e');
+    }
   }
 
   void cadastrar(BuildContext context) async {
@@ -77,24 +99,24 @@ class ControleTelaLogin {
           UserCredential userCredential = await FirebaseAuth.instance
               .createUserWithEmailAndPassword(email: login, password: senha);
 
-          // No serviço de armazenamento
-          _collection_usuarios
-              .add({
+          // No serviço de armazenamento (Firestore)
+          await _collection_usuarios.add({
             'email': login,
-          })
-              .then(
-                  (value) => _irParaTelaPrincipal(userCredential.user as Usuario?, context))
-              .catchError(
-                  (error) => print("Falha ao adicionar o usuário: $error"));
+          });
+
+          User? firebaseUser = userCredential.user;
+          _irParaTelaPrincipal(firebaseUser, context);
         } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {
             MensagemAlerta(context, "Erro: A senha fornecida é muito fraca");
           } else if (e.code == 'email-already-in-use') {
             MensagemAlerta(
                 context, "Erro: Já existe conta com o email informado");
+          } else {
+            MensagemAlerta(context, 'Erro: ${e.message}');
           }
         } catch (e) {
-          print(e);
+          MensagemAlerta(context, 'Erro inesperado: $e');
         }
       } else {
         MensagemAlerta(context, "Erro: Email informado com formato inválido");
