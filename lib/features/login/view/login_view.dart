@@ -1,5 +1,5 @@
 import 'package:cosmoview/features/login/viewmodel/login_viewmodel.dart';
-import 'package:cosmoview/util/widget/campo_edicao.dart';
+import 'package:cosmoview/ui/campo_edicao.dart';
 import 'package:flutter/material.dart';
 
 class TelaLogin extends StatefulWidget {

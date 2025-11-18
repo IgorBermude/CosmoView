@@ -1,7 +1,7 @@
-import 'package:cosmoview/services/firebase_service.dart';
-import 'package:cosmoview/telas/tela_abertura.dart';
+import 'package:cosmoview/data/services/firebase_service.dart';
+import 'package:cosmoview/features/splash/view/abertura_view.dart';
 import 'package:cosmoview/telas/tela_ajuda.dart';
-import 'package:cosmoview/util/widget/menuLateral.dart';
+import 'package:cosmoview/ui/menuLateral.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 

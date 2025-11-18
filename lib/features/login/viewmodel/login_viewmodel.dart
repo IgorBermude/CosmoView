@@ -1,12 +1,12 @@
-import 'package:cosmoview/dominio/usuario.dart';
-import 'package:cosmoview/util/nav.dart';
-import 'package:cosmoview/util/widget/mensagem_alerta.dart';
+import 'package:cosmoview/data/models/usuario.dart';
+import 'package:cosmoview/core/navigation/nav.dart';
+import 'package:cosmoview/ui/mensagem_alerta.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
 
-import '../../../telas/tela_principal.dart';
+import '../../imagem_do_dia/view/imagem_view.dart';
 
 class ControleTelaLogin {
   // Controles de edição do login e senha

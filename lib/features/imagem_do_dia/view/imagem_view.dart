@@ -1,7 +1,7 @@
-// filepath: c:\Users\igors\AndroidStudioProjects\CosmoView\lib\telas\tela_principal.dart
-import 'package:cosmoview/telas/controle_interacao/controle_tela_principal.dart';
+// filepath: c:\Users\igors\AndroidStudioProjects\CosmoView\lib\telas\imagem_view.dart
 import 'package:flutter/material.dart';
-import 'package:cosmoview/dominio/usuario.dart';
+import 'package:cosmoview/data/models/usuario.dart';
+import '../viewmodel/imagem_viewmodel.dart';
 
 class TelaPrincipal extends StatefulWidget {
   final Usuario usuario;

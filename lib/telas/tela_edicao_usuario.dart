@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../dominio/usuario.dart';
+import '../data/models/usuario.dart';
 
 class TelaEdicaoUsuario extends StatefulWidget {
   final Usuario usuario;

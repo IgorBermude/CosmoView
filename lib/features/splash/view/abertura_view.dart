@@ -1,4 +1,4 @@
-import 'package:cosmoview/telas/controle_interacao/controle_tela_abertura.dart';
+import 'package:cosmoview/features/splash/viewmodel/abertura_viewmodel.dart';
 import 'package:flutter/material.dart';
 
 class TelaAbertura extends StatefulWidget {

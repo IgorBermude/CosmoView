@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cosmoview/dominio/usuario.dart';
+import 'package:cosmoview/data/models/usuario.dart';
 import 'package:cosmoview/telas/tela_edicao_usuario.dart';
-import 'package:cosmoview/telas/tela_abertura.dart';
+import 'package:cosmoview/features/splash/view/abertura_view.dart';
 import 'package:cosmoview/features/login/view/login_view.dart';
-import 'package:cosmoview/telas/tela_principal.dart';
-import 'package:cosmoview/util/widget/mensagem_alerta.dart';
+import 'package:cosmoview/features/imagem_do_dia/view/imagem_view.dart';
+import 'package:cosmoview/ui/mensagem_alerta.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ class ControleTelaAbertura{
           MensagemAlerta(context, "Usuário autenticado: ${user.email}");
           final String? email = user.email;
           if (email == null || email.isEmpty) {
-            // Se usuário não tem email, redireciona para abertura/edição
+            // Se usuário não tem email, redireciona para splash/edição
             push(context, TelaLogin(), replace: true);
             return;
           }
@@ -38,12 +38,12 @@ class ControleTelaAbertura{
               MensagemAlerta(context, "Usuário encontrado: ${usuario.login}");
               push(context, TelaPrincipal(usuario), replace: true);
             } else {
-              // Nenhum usuário encontrado -> abrir tela de abertura ou edição
+              // Nenhum usuário encontrado -> abrir tela de splash ou edição
               MensagemAlerta(context, "Nenhum usuário encontrado para o email: $email");
               push(context, TelaLogin(), replace: true);
             }
           }).catchError((error) {
-            // Em caso de erro na consulta, abrir tela de abertura como fallback
+            // Em caso de erro na consulta, abrir tela de splash como fallback
             MensagemAlerta(context, "Erro ao buscar usuário: $error");
             push(context, TelaLogin(), replace: true);
           });
