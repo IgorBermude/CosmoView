@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cosmoview/dominio/usuario.dart';
 import 'package:cosmoview/telas/tela_edicao_usuario.dart';
 import 'package:cosmoview/telas/tela_abertura.dart';
-import 'package:cosmoview/telas/tela_login.dart';
+import 'package:cosmoview/features/login/view/login_view.dart';
 import 'package:cosmoview/telas/tela_principal.dart';
 import 'package:cosmoview/util/widget/mensagem_alerta.dart';
 import 'package:firebase_auth/firebase_auth.dart';

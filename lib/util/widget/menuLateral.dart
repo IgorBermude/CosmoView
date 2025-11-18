@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cosmoview/telas/tela_login.dart';
+import 'package:cosmoview/features/login/view/login_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
