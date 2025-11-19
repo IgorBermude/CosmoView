@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xFF072C6C),
         ),
       ),
-      home: TelaAjuda(),
+      home: TelaAbertura(),
     );
   }
 }

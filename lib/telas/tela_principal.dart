@@ -1,7 +1,8 @@
-// filepath: c:\Users\igors\AndroidStudioProjects\CosmoView\lib\telas\tela_principal.dart
 import 'package:cosmoview/telas/controle_interacao/controle_tela_principal.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmoview/dominio/usuario.dart';
+
+import '../util/widget/menuLateral.dart';
 
 class TelaPrincipal extends StatefulWidget {
   final Usuario usuario;
@@ -24,9 +25,13 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Principal')),
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.blue,
+          title: const Text('Tela Principal'),
+        ),
+      drawer: MenuLateral(),
       body: const Center(child: Text('Tela Principal')),
     );
   }
 }
-
