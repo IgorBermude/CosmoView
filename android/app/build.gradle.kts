@@ -32,7 +32,7 @@ android {
     defaultConfig {
         applicationId = "com.example.cosmoview"
         // 🔧 Corrige apenas o minSdk exigido pelo Firebase
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
