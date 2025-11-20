@@ -1,7 +1,10 @@
 import 'package:cosmoview/data/services/firebase_service.dart';
+import 'package:cosmoview/features/favoritos/view/favoritos_view.dart';
+import 'package:cosmoview/features/imagem_do_dia/view/imagem_view.dart';
 import 'package:cosmoview/features/splash/view/abertura_view.dart';
 import 'package:cosmoview/telas/tela_ajuda.dart';
 import 'package:cosmoview/ui/menuLateral.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -24,7 +27,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xFF072C6C),
         ),
       ),
-      home: TelaAjuda(),
+      home: TelaAbertura(),
     );
   }
 }

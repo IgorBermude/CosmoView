@@ -1,126 +1,92 @@
 import 'package:cosmoview/data/models/usuario.dart';
-import 'package:cosmoview/core/navigation/nav.dart';
+import 'package:cosmoview/features/login/repository/login_repository.dart';
 import 'package:cosmoview/ui/mensagem_alerta.dart';
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cosmoview/core/navigation/nav.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 import '../../imagem_do_dia/view/imagem_view.dart';
 
-class ControleTelaLogin {
-  // Controles de edição do login e senha
-  final controlador_login = TextEditingController();
-  final controlador_senha = TextEditingController();
+class LoginViewModel {
+  final LoginRepository repository;
 
-  // Controlador de formulário (para fazer validações)
-  final formkey = GlobalKey<FormState>();
+  LoginViewModel(this.repository);
 
-  // Controladores de foco
-  final focus_senha = FocusNode();
-  final focus_botao = FocusNode();
+  // Controllers
+  final emailController = TextEditingController();
+  final senhaController = TextEditingController();
 
-  // Autenticação
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final formKey = GlobalKey<FormState>();
 
-  CollectionReference<Map<String, dynamic>> get _collection_usuarios =>
-      FirebaseFirestore.instance.collection('usuarios');
+  // Focos
+  final focusSenha = FocusNode();
 
-  void logar(BuildContext context) async {
-    if (formkey.currentState!.validate()) {
-      String login = controlador_login.text.trim();
-      String senha = controlador_senha.text.trim();
+  Future<void> logar(BuildContext context) async {
+    if (!formKey.currentState!.validate()) return;
 
-      if (EmailValidator.validate(login)) {
-        try {
-          // Logando
-          UserCredential userCredential = await _auth
-              .signInWithEmailAndPassword(email: login, password: senha);
-          User? firebaseUser = userCredential.user;
-          _irParaTelaPrincipal(firebaseUser, context);
-        } on FirebaseAuthException catch (e) {
-          if (e.code == 'user-not-found') {
-            MensagemAlerta(
-                context, "Erro: Usuário não encontrado para o email informado");
-          } else if (e.code == 'wrong-password') {
-            MensagemAlerta(
-              context,
-              "Erro: Password inválido!!!",
-            );
-            print('Wrong password provided for that user.');
-          } else {
-            MensagemAlerta(context, 'Erro: ${e.message}');
-          }
-        } catch (e) {
-          MensagemAlerta(context, 'Erro inesperado: $e');
-        }
-      } else {
-        MensagemAlerta(context, "Erro: Email informado com formato inválido");
-      }
-    }
-  }
+    final email = emailController.text.trim();
+    final senha = senhaController.text.trim();
 
-  void _irParaTelaPrincipal(User? firebaseUser, BuildContext context) async {
-    if (firebaseUser == null || firebaseUser.email == null) {
-      MensagemAlerta(context, "Erro: usuário inválido após autenticação");
+    if (!EmailValidator.validate(email)) {
+      MensagemAlerta(context, "Erro: Email inválido");
       return;
     }
 
     try {
-      final QuerySnapshot<Map<String, dynamic>> snapshot = await _collection_usuarios
-          .where("email", isEqualTo: firebaseUser.email)
-          .get();
-
-      if (snapshot.docs.isNotEmpty) {
-        final doc = snapshot.docs.first;
-        Usuario usuario = Usuario.fromMap(doc.data());
-        usuario.id = doc.id;
-        push(context, TelaPrincipal(usuario), replace: true);
-      } else {
-        // Caso não exista, criar documento mínimo e navegar
-        final docRef = await _collection_usuarios.add({'email': firebaseUser.email});
-        Usuario usuario = Usuario();
-        usuario.login = firebaseUser.email;
-        usuario.id = docRef.id;
-        push(context, TelaPrincipal(usuario), replace: true);
-      }
+      final user = await repository.login(email, senha);
+      await _processarUsuario(user, context);
     } catch (e) {
-      MensagemAlerta(context, 'Erro ao buscar/registrar usuário: $e');
+      MensagemAlerta(context, "Erro ao realizar login: $e");
     }
   }
 
-  void cadastrar(BuildContext context) async {
-    if (formkey.currentState!.validate()) {
-      String login = controlador_login.text.trim();
-      String senha = controlador_senha.text.trim();
+  Future<void> cadastrar(BuildContext context) async {
+    if (!formKey.currentState!.validate()) return;
 
-      if (EmailValidator.validate(login)) {
-        try {
-          UserCredential userCredential = await FirebaseAuth.instance
-              .createUserWithEmailAndPassword(email: login, password: senha);
+    final email = emailController.text.trim();
+    final senha = senhaController.text.trim();
 
-          // No serviço de armazenamento (Firestore)
-          await _collection_usuarios.add({
-            'email': login,
-          });
+    if (!EmailValidator.validate(email)) {
+      MensagemAlerta(context, "Erro: Email inválido");
+      return;
+    }
 
-          User? firebaseUser = userCredential.user;
-          _irParaTelaPrincipal(firebaseUser, context);
-        } on FirebaseAuthException catch (e) {
-          if (e.code == 'weak-password') {
-            MensagemAlerta(context, "Erro: A senha fornecida é muito fraca");
-          } else if (e.code == 'email-already-in-use') {
-            MensagemAlerta(
-                context, "Erro: Já existe conta com o email informado");
-          } else {
-            MensagemAlerta(context, 'Erro: ${e.message}');
-          }
-        } catch (e) {
-          MensagemAlerta(context, 'Erro inesperado: $e');
-        }
+    try {
+      final user = await repository.cadastrar(email, senha);
+
+      // Registrar usuário
+      await repository.criarUsuario(email);
+
+      await _processarUsuario(user, context);
+    } catch (e) {
+      MensagemAlerta(context, "Erro ao cadastrar: $e");
+    }
+  }
+
+  Future<void> _processarUsuario(User? firebaseUser, BuildContext context) async {
+    if (firebaseUser == null || firebaseUser.email == null) {
+      MensagemAlerta(context, "Erro: usuário inválido");
+      return;
+    }
+
+    try {
+      final doc = await repository.buscarUsuario(firebaseUser.email!);
+
+      Usuario usuario = Usuario();
+
+      if (doc != null) {
+        usuario = Usuario.fromMap(doc.data()!);
+        usuario.id = doc.id;
       } else {
-        MensagemAlerta(context, "Erro: Email informado com formato inválido");
+        final id = await repository.criarUsuario(firebaseUser.email!);
+        usuario.login = firebaseUser.email;
+        usuario.id = id;
       }
+
+      push(context, TelaPrincipal(usuario), replace: true);
+    } catch (e) {
+      MensagemAlerta(context, "Erro ao processar usuário: $e");
     }
   }
 }

@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:cosmoview/features/favoritos/view/favoritos_view.dart';
 import 'package:cosmoview/features/login/view/login_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -111,6 +113,20 @@ class _MenuLateralState extends State<MenuLateral> {
                 );
                 Usuario.limpar();
                 //FirebaseAuth.instance.signOut();
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.favorite),
+              title: Text("Favoritos"),
+              subtitle: Text("Mostrar favoritos"),
+              trailing: Icon(Icons.arrow_forward),
+              onTap: (){
+                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => TelaFavoritos(usuarioId: usuario?.id,)),
+                      (route) => false,
+                );
               },
             ),
           ]
