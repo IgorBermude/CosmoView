@@ -118,6 +118,7 @@ class _MenuLateralState extends State<MenuLateral> {
                       (route) => false,
                 );
                 Usuario.limpar();
+                //FirebaseAuth.instance.signOut();
               },
             ),
           ],
