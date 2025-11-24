@@ -23,58 +23,91 @@ class TelaFavoritos extends StatelessWidget {
         drawer: MenuLateral(),
         body: Consumer<FavoritosViewModel>(
           builder: (context, vm, child) {
-            if (vm.carregando) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (vm.erro != null) {
-              return Center(child: Text("Erro: ${vm.erro}"));
-            }
-
-            if (vm.imagens.isEmpty) {
-              return const Center(child: Text("Nenhuma imagem favorita."));
-            }
-
-            return Padding(
-              padding: const EdgeInsets.all(10),
-              child: GridView.builder(
-                itemCount: vm.imagens.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
+            return Column(
+              children: [
+                /// -------------------------------
+                /// ★ Botão para gerar imagens de teste
+                /// -------------------------------
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      vm.adicionarFavoritosTeste(usuarioId!);
+                    },
+                    child: const Text("Gerar 10 imagens de teste no Firebase"),
+                  ),
                 ),
-                itemBuilder: (context, index) {
-                  final img = vm.imagens[index];
 
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: Image.network(
-                            img.url,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.white),
-                            onPressed: () {
-                              vm.removerFavorito(usuarioId!, index);
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                },
-              ),
+                /// -------------------------------
+                /// ★ Botão para recarregar favoritos
+                /// -------------------------------
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      vm.carregarFavoritos(usuarioId!);
+                    },
+                    child: const Text("Recarregar favoritos"),
+                  ),
+                ),
+
+                Expanded(
+                  child: _buildGrid(vm),
+                ),
+              ],
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildGrid(FavoritosViewModel vm) {
+    if (vm.carregando) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (vm.erro != null) {
+      return Center(child: Text("Erro: ${vm.erro}"));
+    }
+
+    if (vm.imagens.isEmpty) {
+      return const Center(child: Text("Nenhuma imagem favorita."));
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: GridView.builder(
+        itemCount: vm.imagens.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+        ),
+        itemBuilder: (context, index) {
+          final img = vm.imagens[index];
+
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Image.network(img.url, fit: BoxFit.cover),
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.white),
+                    onPressed: () {
+                      vm.removerFavorito(usuarioId!, index);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

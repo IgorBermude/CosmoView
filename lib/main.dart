@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xFF072C6C),
         ),
       ),
-      home: TelaAbertura(),
+      home: TelaFavoritos(usuarioId:  'HjEG1OrjqyUdMCk27I3p' ),
     );
   }
 }
