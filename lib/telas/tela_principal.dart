@@ -5,6 +5,8 @@ import 'package:cosmoview/dominio/usuario.dart';
 import '../util/widget/menuLateral.dart';
 import '../dominio/apod.dart';
 import '../services/nasa_service.dart';
+import '../dominio/imagem_nasa.dart';
+import '../services/imagem_service.dart';
 
 class TelaPrincipal extends StatefulWidget {
   final Usuario usuario;
@@ -19,6 +21,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   late Future<Apod> _futureApod;
   final NasaService _nasaService = NasaService(); // usa DEMO_KEY por padrão
   bool _liked = false;
+  final ImagemService _imagemService = ImagemService();
 
   @override
   void initState() {
@@ -30,6 +33,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.blue,
@@ -52,23 +56,46 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Data da Imagem', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text('Data da Imagem', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                   const SizedBox(height: 6),
-                  Text(apod.date, style: const TextStyle(fontWeight: FontWeight.w600)),
+                  Text(apod.date, style: TextStyle(fontWeight: FontWeight.w600, color: Colors.grey[300])),
                   const SizedBox(height: 6),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: Text(apod.title,
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                       ),
                       IconButton(
                         icon: Icon(
                           _liked ? Icons.favorite : Icons.favorite_border,
                           color: _liked ? Colors.red : Colors.grey,
                         ),
-                        onPressed: () => setState(() => _liked = !_liked),
+                        onPressed: () async {
+                          // alterna estado localmente para feedback imediato
+                          setState(() => _liked = !_liked);
+                          final imagem = ImagemNasa(titulo: apod.title, url: apod.url);
+                          if (_liked) {
+                            try {
+                              await _imagemService.saveImagemFavorita(widget.usuario, imagem);
+                              if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Imagem salva como favorita')));
+                            } catch (e) {
+                              // desfaz a marcação se falhar
+                              setState(() => _liked = false);
+                              if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erro ao salvar: $e')));
+                            }
+                          } else {
+                            // Ao desmarcar, tenta remover do banco (silencioso em erro)
+                            try {
+                              await _imagemService.removeImagemFavorita(widget.usuario, imagem);
+                              if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Removido dos favoritos')));
+                            } catch (e) {
+                              // ignorar erro de remoção ou notificar
+                              if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erro ao remover: $e')));
+                            }
+                          }
+                        },
                       ),
                     ],
                   ),
@@ -76,12 +103,12 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   if (apod.isImage)
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.grey[900],
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: Colors.blue.shade400, width: 3),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withOpacity(0.6),
                             blurRadius: 6,
                             offset: const Offset(0, 2),
                           ),
@@ -98,7 +125,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                             return Center(child: CircularProgressIndicator(value: progress.expectedTotalBytes != null ? progress.cumulativeBytesLoaded / (progress.expectedTotalBytes ?? 1) : null));
                           },
                           errorBuilder: (context, error, stackTrace) => Container(
-                            color: Colors.grey[200],
+                            color: Colors.grey[800],
                             child: const Center(child: Icon(Icons.broken_image, size: 48, color: Colors.grey)),
                           ),
                         ),
@@ -108,16 +135,16 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                     Container(
                       height: 220,
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: Colors.grey[800],
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: Colors.blue.shade400, width: 3),
                       ),
-                      child: Center(child: Text('Conteúdo não é imagem: ${apod.mediaType}')),
+                      child: Center(child: Text('Conteúdo não é imagem: ${apod.mediaType}', style: TextStyle(color: Colors.grey[300]))),
                     ),
                   const SizedBox(height: 12),
-                  Text('Descrição da imagem: ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text('Descrição da imagem: ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                   const SizedBox(height: 6),
-                  Text(apod.explanation),
+                  Text(apod.explanation, style: TextStyle(color: Colors.grey[300])),
                 ],
               ),
             );
