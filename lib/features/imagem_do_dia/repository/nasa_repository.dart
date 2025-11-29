@@ -1,5 +1,9 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+
+import '../../../data/models/apod.dart';
+import '../../../data/models/imagem_nasa.dart';
 
 class NasaRepository {
   final String _urlBase = 'https://api.nasa.gov';
@@ -21,7 +25,7 @@ class NasaRepository {
     }
   }
   Future<Apod> fetchApod() async {
-    final uri = Uri.parse('$_baseUrl?api_key=$_apiKey');
+    final uri = Uri.parse('$_urlBase/planetary/apod?api_key=$_apiKey');
     final response = await http.get(uri);
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonBody = json.decode(response.body);

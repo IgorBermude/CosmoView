@@ -1,9 +1,10 @@
-import 'package:cosmoview/services/firebase_service.dart';
-import 'package:cosmoview/telas/tela_abertura.dart';
 import 'package:cosmoview/telas/tela_ajuda.dart';
 import 'package:cosmoview/util/menuLateral.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+import 'data/services/firebase_service.dart';
+import 'features/splash/view/abertura_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

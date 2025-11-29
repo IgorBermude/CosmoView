@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../dominio/imagem_nasa.dart';
-import '../dominio/usuario.dart';
+import '../models/imagem_nasa.dart';
+import '../models/usuario.dart';
 
 class ImagemService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

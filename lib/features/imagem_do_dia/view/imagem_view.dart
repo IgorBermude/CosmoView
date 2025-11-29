@@ -1,12 +1,12 @@
 import 'package:cosmoview/features/imagem_do_dia/viewmodel/imagem_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:cosmoview/dominio/usuario.dart';
 
+import '../../../data/models/imagem_nasa.dart';
+import '../../../data/models/usuario.dart';
+import '../../../data/services/imagem_service.dart';
 import '../../../util/menuLateral.dart';
 import '../../../data/models/apod.dart';
 import '../repository/nasa_repository.dart';
-import '../../../dominio/imagem_nasa.dart';
-import '../../../services/imagem_service.dart';
 
 class TelaPrincipal extends StatefulWidget {
   final Usuario usuario;
@@ -19,7 +19,7 @@ class TelaPrincipal extends StatefulWidget {
 class _TelaPrincipalState extends State<TelaPrincipal> {
   late ControleTelaPrincipal _controle;
   late Future<Apod> _futureApod;
-  final NasaService _nasaService = NasaService(); // usa DEMO_KEY por padrão
+  final NasaRepository _nasaRepository = NasaRepository();
   bool _liked = false;
   final ImagemService _imagemService = ImagemService();
 
@@ -27,7 +27,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   void initState() {
     super.initState();
     _controle = ControleTelaPrincipal(widget.usuario);
-    _futureApod = _nasaService.fetchApod();
+    _futureApod = _nasaRepository.fetchApod();
   }
 
   @override
