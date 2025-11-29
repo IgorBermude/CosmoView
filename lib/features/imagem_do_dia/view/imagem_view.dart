@@ -1,12 +1,12 @@
-import 'package:cosmoview/telas/controle_interacao/controle_tela_principal.dart';
+import 'package:cosmoview/features/imagem_do_dia/viewmodel/imagem_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmoview/dominio/usuario.dart';
 
-import '../util/widget/menuLateral.dart';
-import '../dominio/apod.dart';
-import '../services/nasa_service.dart';
-import '../dominio/imagem_nasa.dart';
-import '../services/imagem_service.dart';
+import '../../../util/menuLateral.dart';
+import '../../../data/models/apod.dart';
+import '../repository/nasa_repository.dart';
+import '../../../dominio/imagem_nasa.dart';
+import '../../../services/imagem_service.dart';
 
 class TelaPrincipal extends StatefulWidget {
   final Usuario usuario;

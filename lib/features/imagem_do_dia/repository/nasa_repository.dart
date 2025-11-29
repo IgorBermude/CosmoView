@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../dominio/apod.dart';
+import '../../../data/models/apod.dart';
 
 class NasaService {
   static const _baseUrl = 'https://api.nasa.gov/planetary/apod';

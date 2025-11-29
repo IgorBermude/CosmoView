@@ -4,11 +4,11 @@ import 'package:cosmoview/telas/tela_login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../dominio/usuario.dart';
-import '../../telas/tela_ajuda.dart';
-import '../../telas/tela_edicao_usuario.dart';
-import '../../telas/tela_abertura.dart';
-import '../gerenciador_arquivo.dart';
+import '../dominio/usuario.dart';
+import '../telas/tela_ajuda.dart';
+import '../telas/tela_edicao_usuario.dart';
+import '../telas/tela_abertura.dart';
+import 'gerenciador_arquivo.dart';
 
 class MenuLateral extends StatefulWidget {
   @override

@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
 
-import '../tela_principal.dart';
+import '../../features/imagem_do_dia/view/imagem_view.dart';
 
 class ControleTelaLogin {
   // Controles de edição do login e senha
