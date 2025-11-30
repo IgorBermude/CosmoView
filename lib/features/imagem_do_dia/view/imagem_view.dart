@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../../data/models/imagem_nasa.dart';
 import '../../../data/models/usuario.dart';
-import '../../../data/services/imagem_service.dart';
 import '../../../util/menuLateral.dart';
 import '../../../data/models/apod.dart';
 import '../repository/nasa_repository.dart';
@@ -21,7 +20,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   late Future<Apod> _futureApod;
   final NasaRepository _nasaRepository = NasaRepository();
   bool _liked = false;
-  final ImagemService _imagemService = ImagemService();
+  final ImagemViewModel _imagemViewModel = ImagemViewModel();
 
   @override
   void initState() {
@@ -78,7 +77,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           final imagem = ImagemNasa(titulo: apod.title, url: apod.url, explanation: apod.explanation);
                           if (_liked) {
                             try {
-                              await _imagemService.saveImagemFavorita(widget.usuario, imagem);
+                              await _imagemViewModel.adicionarFavorito(widget.usuario, imagem);
                               if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Imagem salva como favorita')));
                             } catch (e) {
                               // desfaz a marcação se falhar
@@ -88,7 +87,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           } else {
                             // Ao desmarcar, tenta remover do banco (silencioso em erro)
                             try {
-                              await _imagemService.removeImagemFavorita(widget.usuario, imagem);
+                              await _imagemViewModel.removerFavorito(widget.usuario, imagem);
                               if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Removido dos favoritos')));
                             } catch (e) {
                               // ignorar erro de remoção ou notificar
