@@ -13,11 +13,9 @@ class FavoritosRepository{
   }
 
   Future<List<ImagemNasa>> getFavoritos(String usuarioId) async {
-    print('chegou no repository');
     final doc = await _db.collection("usuarios").doc(usuarioId).collection('favoritos').get();
 
     if (doc.docs.isEmpty) {
-      print('veio nada');
       return [];
     }
 
@@ -26,15 +24,16 @@ class FavoritosRepository{
         .toList();
   }
   Future<void> removerFavorito(String usuarioId, int index) async{
-    final ref = _db.collection("favoritos").doc(usuarioId);
+    final ref = _db.collection('usuarios').doc(usuarioId).collection('favoritos');
 
-    final doc = await ref.get();
-    final List imagens = doc.data()?['imagens'] ?? [];
+    final snapshot = await ref.get();
 
-    if(index < 0 || index >= imagens.length) return;
+    final docs = snapshot.docs;
 
-    imagens.removeAt(index);
+    if (index < 0 || index >= docs.length) return;
 
-    await ref.update({'imagens': imagens});
-    }
+    final docId = docs[index].id;
+
+    await ref.doc(docId).delete();
   }
+}
