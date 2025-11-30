@@ -75,7 +75,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                         onPressed: () async {
                           // alterna estado localmente para feedback imediato
                           setState(() => _liked = !_liked);
-                          final imagem = ImagemNasa(titulo: apod.title, url: apod.url);
+                          final imagem = ImagemNasa(titulo: apod.title, url: apod.url, explanation: apod.explanation);
                           if (_liked) {
                             try {
                               await _imagemService.saveImagemFavorita(widget.usuario, imagem);

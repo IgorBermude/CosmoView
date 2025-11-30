@@ -1,3 +1,4 @@
+import 'package:cosmoview/features/favoritos/view/tela_detalhe_imagem.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../ui/menuLateral.dart';
@@ -87,26 +88,39 @@ class TelaFavoritos extends StatelessWidget {
         itemBuilder: (context, index) {
           final img = vm.imagens[index];
 
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: Image.network(img.url, fit: BoxFit.cover),
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => TelaDetalheImagem(imagem: img),
                 ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.white),
-                    onPressed: () {
-                      vm.removerFavorito(usuarioId!, index);
-                    },
+              );
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Image.network(img.url, fit: BoxFit.cover),
                   ),
-                ),
-              ],
+
+                  // ⭐ Botão de remover
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.white),
+                      onPressed: () {
+                        vm.removerFavorito(usuarioId!, index);
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
+
         },
       ),
     );
