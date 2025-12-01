@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../data/models/usuario.dart';
 import '../features/imagem_do_dia/view/imagem_view.dart';
+import '../features/imagem_do_dia/view/calendario_view.dart';
 import '../telas/tela_ajuda.dart';
 import '../telas/tela_edicao_usuario.dart';
 import '../data/services/gerenciador_arquivo.dart';
@@ -116,6 +117,18 @@ class _MenuLateralState extends State<MenuLateral> {
                 Navigator.pop(context);
                 Navigator.push(context,
                   MaterialPageRoute(builder: (context) => TelaPrincipal(usuario!))
+                );
+              },
+            ),
+            ListTile(
+              title: Text('Calendário'),
+              leading: Icon(Icons.calendar_today),
+              subtitle: Text('Escolha a data da imagem do dia'),
+              trailing: Icon(Icons.arrow_forward),
+              onTap: (){
+                Navigator.pop(context);
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => TelaCalendario(usuario: usuario))
                 );
               },
             ),

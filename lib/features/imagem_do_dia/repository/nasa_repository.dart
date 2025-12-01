@@ -34,4 +34,16 @@ class NasaRepository {
       throw Exception('Falha ao buscar APOD: ${response.statusCode}');
     }
   }
+
+  Future<Apod> fetchApodByDate(String date) async {
+    // espera data no formato AAAA-MM-DD
+    final uri = Uri.parse('$_urlBase/planetary/apod?date=$date&api_key=$_apiKey');
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonBody = json.decode(response.body);
+      return Apod.fromJson(jsonBody);
+    } else {
+      throw Exception('Falha ao buscar APOD para $date: ${response.statusCode}');
+    }
+  }
 }
