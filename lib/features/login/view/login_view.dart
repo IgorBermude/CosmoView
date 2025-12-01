@@ -3,6 +3,9 @@ import 'package:cosmoview/features/login/repository/login_repository.dart';
 import 'package:cosmoview/ui/campo_edicao.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/navigation/nav.dart';
+import '../../cadastro/view/cadastro_view.dart';
+
 class TelaLogin extends StatefulWidget {
   const TelaLogin({Key? key}) : super(key: key);
 
@@ -51,8 +54,8 @@ class _TelaLoginState extends State<TelaLogin> {
               ),
               const SizedBox(height: 8),
               OutlinedButton(
-                onPressed: () => viewModel.cadastrar(context),
-                child: const Text("Cadastrar"),
+                onPressed: () => push(context, TelaCadastro()),
+                  child: const Text("Cadastrar"),
               ),
               const SizedBox(height: 16),
               Center(

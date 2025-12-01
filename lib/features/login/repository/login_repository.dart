@@ -14,14 +14,6 @@ class LoginRepository {
     return credential.user;
   }
 
-  Future<User?> cadastrar(String email, String senha) async {
-    final credential = await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: senha,
-    );
-    return credential.user;
-  }
-
   Future<DocumentSnapshot<Map<String, dynamic>>?> buscarUsuario(String email) async {
     final result =
     await _collectionUsuarios.where("email", isEqualTo: email).get();
@@ -33,10 +25,5 @@ class LoginRepository {
   String buscarUsuarioAtual(){
     final usuario = _auth.currentUser;
     return usuario?.uid ?? '';
-  }
-
-  Future<String> criarUsuario(String email) async {
-    final doc = await _collectionUsuarios.add({"email": email});
-    return doc.id;
   }
 }

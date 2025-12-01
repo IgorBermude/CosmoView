@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../data/models/usuario.dart';
+import '../features/editar_perfil/view/editar_perfil_view.dart';
 
 class TelaEdicaoUsuario extends StatefulWidget {
   final Usuario usuario;
@@ -9,7 +10,13 @@ class TelaEdicaoUsuario extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
+    return _TelaEdicaoUsuarioState();
+  }
+}
+
+class _TelaEdicaoUsuarioState extends State<TelaEdicaoUsuario> {
+  @override
+  Widget build(BuildContext context) {
+    return EditarPerfilView(usuario: widget.usuario);
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../data/models/imagem_nasa.dart';
 import '../../../data/models/usuario.dart';
-import '../../../util/menuLateral.dart';
+import '../../../ui/menuLateral.dart';
 import '../../../data/models/apod.dart';
 import '../repository/nasa_repository.dart';
 

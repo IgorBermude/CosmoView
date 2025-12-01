@@ -1,4 +1,5 @@
 import 'package:cosmoview/data/models/usuario.dart';
+import 'package:cosmoview/features/cadastro/view/cadastro_view.dart';
 import 'package:cosmoview/features/login/repository/login_repository.dart';
 import 'package:cosmoview/ui/mensagem_alerta.dart';
 import 'package:cosmoview/core/navigation/nav.dart';
@@ -41,29 +42,6 @@ class LoginViewModel {
     }
   }
 
-  Future<void> cadastrar(BuildContext context) async {
-    if (!formKey.currentState!.validate()) return;
-
-    final email = emailController.text.trim();
-    final senha = senhaController.text.trim();
-
-    if (!EmailValidator.validate(email)) {
-      MensagemAlerta(context, "Erro: Email inválido");
-      return;
-    }
-
-    try {
-      final user = await repository.cadastrar(email, senha);
-
-      // Registrar usuário
-      await repository.criarUsuario(email);
-
-      await _processarUsuario(user, context);
-    } catch (e) {
-      MensagemAlerta(context, "Erro ao cadastrar: $e");
-    }
-  }
-
   Future<void> _processarUsuario(User? firebaseUser, BuildContext context) async {
     if (firebaseUser == null || firebaseUser.email == null) {
       MensagemAlerta(context, "Erro: usuário inválido");
@@ -78,10 +56,6 @@ class LoginViewModel {
       if (doc != null) {
         usuario = Usuario.fromMap(doc.data()!);
         usuario.id = doc.id;
-      } else {
-        final id = await repository.criarUsuario(firebaseUser.email!);
-        usuario.login = firebaseUser.email;
-        usuario.id = id;
       }
 
       push(context, TelaPrincipal(usuario), replace: true);

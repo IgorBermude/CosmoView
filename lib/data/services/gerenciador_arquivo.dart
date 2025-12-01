@@ -4,20 +4,31 @@ class GerenciadorArquivo {
   static Future<File?> obterImagem(String? urlFoto) async {
     if (urlFoto == null || urlFoto.isEmpty) return null;
     try {
-      /*final response = await http.get(Uri.parse(urlFoto));
-      if (response.statusCode == 200) {
-        final dir = await getTemporaryDirectory();
-        final file = File('${dir.path}/imagem_temp.jpg');
-        await file.writeAsBytes(response.bodyBytes);
-        return file;
-      }*/
+      Uri? uri;
+      try {
+        uri = Uri.parse(urlFoto);
+      } catch (_) {
+        uri = null;
+      }
+
+      File file;
+      // trata esquemas file:// ou path simples no dispositivo
+      if (uri != null && uri.scheme == 'file') {
+        file = File.fromUri(uri);
+      } else {
+        file = File(urlFoto);
+      }
+
+      if (await file.exists()) return file;
+      return null;
     } catch (e) {
-      // Trate o erro conforme necessário
       return null;
     }
-    return null;
   }
 
-  static Future getTemporaryDirectory() async {}
+  static Future<Directory?> getTemporaryDirectory() async {
+    // Retorna diretório temporário do sistema; usado apenas para compatibilidade
+    return Directory.systemTemp;
+  }
   // Implementação do gerenciador de arquivos
 }
