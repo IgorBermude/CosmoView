@@ -29,7 +29,7 @@ class TelaFavoritos extends StatelessWidget {
                 /// -------------------------------
                 /// ★ Botão para gerar imagens de teste
                 /// -------------------------------
-                Padding(
+                /*Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: ElevatedButton(
                     onPressed: () {
@@ -50,7 +50,7 @@ class TelaFavoritos extends StatelessWidget {
                     },
                     child: const Text("Recarregar favoritos"),
                   ),
-                ),
+                ),*/
 
                 Expanded(
                   child: _buildGrid(vm),
