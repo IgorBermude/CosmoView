@@ -64,7 +64,7 @@ class _MenuLateralState extends State<MenuLateral> {
 
                 if (user == null) {
                   // Nenhum usuário: exibe header padrão
-                  return _header(Usuario(), AssetImage("assets/icon/icone_aplicacao.png"));
+                  return _header(Usuario(), AssetImage("assets/Logo.png"));
                 }
 
                 if (user.urlFoto != null && user.urlFoto!.isNotEmpty) {
@@ -84,14 +84,14 @@ class _MenuLateralState extends State<MenuLateral> {
                         return _header(user, FileImage(imgSnapshot.data!));
                       } else {
                         // Caso não consiga carregar o arquivo, mostra ícone padrão
-                        return _header(user, AssetImage("assets/icon/icone_aplicacao.png"));
+                        return _header(user, AssetImage("assets/Logo.png"));
                       }
                     },
                   );
                 }
 
                 // Sem foto: mostra ícone padrão
-                return _header(user, AssetImage("assets/icon/icone_aplicacao.png"));
+                return _header(user, AssetImage("assets/Logo.png"));
               },
             ),
             ListTile(

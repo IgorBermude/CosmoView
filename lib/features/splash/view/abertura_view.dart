@@ -18,12 +18,12 @@ class _TelaAberturaState extends State<TelaAbertura> {
   @override
   Widget build(BuildContext context){
     return Container(
-      color: Colors.green[200],
+      color: Colors.blueAccent,
       alignment: Alignment.center,
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Image.asset("assets/icon/icone_aplicacao.png", fit: BoxFit.contain),
+          Center(child: Image.asset("assets/Logo.png", fit: BoxFit.contain)),
           Container(
             alignment: Alignment.bottomCenter,
             padding: EdgeInsets.only(bottom: 100),
